@@ -23,7 +23,7 @@ module button_debounce (
             counter_reg <= counter_reg + 1;
             if(counter_reg == (F_COUNT-1)) begin
                 counter_reg <= 0;
-                clk_1mhz = 1'b1;
+                clk_1mhz <= 1'b1;
             end else begin
                 clk_1mhz <= 1'b0;
             end
