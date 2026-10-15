@@ -45,7 +45,7 @@ module uart_tx(
 );
 
     localparam IDLE = 0, START = 1, BIT0 = 2, BIT1 = 3, BIT2 = 4, BIT3 = 5;
-    localparam BIT4 = 6, BIT5 = 7, BIT6 = 8, BIT7 = 9, STOP = 10;
+    localparam BIT4 = 6, BIT5 = 7, BIT6 = 8, BIT7 = 9, STOP = 10, WAIT = 11;
 
     reg[3:0] c_state, n_state;
     reg tx_reg, tx_next;
@@ -77,9 +77,15 @@ module uart_tx(
             tx_next = 1'b1;
             tx_busy_next = 1'b0;
             if(tx_start) begin
-                n_state = START;
+                n_state = WAIT;
             end
     
+        end
+
+        WAIT : begin
+            if(b_tick) begin
+                n_state = START;
+            end
         end
 
         START : begin
