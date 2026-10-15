@@ -44,9 +44,10 @@ module uart_tx(
     output tx_busy
 );
 
-    localparam IDLE = 0, START = 1, BIT0 = 2, BIT1 = 3, BIT2 = 4, BIT3 = 5;
-    localparam BIT4 = 6, BIT5 = 7, BIT6 = 8, BIT7 = 9, STOP = 10, WAIT = 11;
+    localparam IDLE = 0, START = 1, DATA = 2, STOP = 3, WAIT = 4; 
 
+    reg [2:0] bit_count_reg, bit_count_next;
+    reg [7:0] data_reg, data_next;
     reg[3:0] c_state, n_state;
     reg tx_reg, tx_next;
     reg tx_busy_reg, tx_busy_next;
@@ -57,10 +58,14 @@ module uart_tx(
     always @(posedge clk, posedge rst) begin
         if(rst) begin
             c_state <= IDLE;
+            bit_count_reg <= 3'b0;
+            data_reg <= 8'h0;
             tx_reg <= 1'b1;
             tx_busy_reg <= 1'b0; // n busy
         end else begin
             c_state <= n_state;
+            data_reg <= data_next;
+            bit_count_reg <= bit_count_next;
             tx_reg <= tx_next;
             tx_busy_reg <= tx_busy_next;
         end
@@ -70,13 +75,16 @@ module uart_tx(
 
     always @(*) begin
         n_state = c_state;
+        bit_count_next = bit_count_reg;
+        data_next = data_reg;
         tx_next = tx_reg;
-        tx_busy_next <= tx_busy_reg;
+        tx_busy_next = tx_busy_reg;
         case(c_state)
         IDLE : begin
             tx_next = 1'b1;
             tx_busy_next = 1'b0;
             if(tx_start) begin
+                data_next = tx_data;
                 n_state = WAIT;
             end
     
@@ -92,63 +100,22 @@ module uart_tx(
             tx_busy_next = 1'b1;
             tx_next = 1'b0;
             if(b_tick) begin
-                n_state = BIT0;
+                bit_count_next = 3'b0;
+                n_state = DATA;
             end
         end
 
-        BIT0 : begin
-            tx_next = tx_data[0];
+        DATA : begin
+            tx_next = data_reg[bit_count_reg];
             if(b_tick) begin
-                n_state = BIT1;
-            end
-        end
-
-        BIT1 : begin
-            tx_next = tx_data[1];
-            if(b_tick) begin
-                n_state = BIT2;
-            end
-        end
-
-        BIT2 : begin
-            tx_next = tx_data[2];
-            if(b_tick) begin
-                n_state = BIT3;
-            end
-        end
-
-        BIT3 : begin
-            tx_next = tx_data[3];
-            if(b_tick) begin
-                n_state = BIT4;
-            end
-        end
-
-        BIT4 : begin
-            tx_next = tx_data[4];
-            if(b_tick) begin
-                n_state = BIT5;
-            end
-        end
-
-        BIT5 : begin
-            tx_next = tx_data[5];
-            if(b_tick) begin
-                n_state = BIT6;
-            end
-        end
-
-        BIT6 : begin
-            tx_next = tx_data[6];
-            if(b_tick) begin
-                n_state = BIT7;
-            end
-        end
-
-        BIT7 : begin
-            tx_next = tx_data[7];
-            if(b_tick) begin
-                n_state = STOP;
+                //data_next = data_reg >>1;
+                data_next = {1'b0,data_reg[7:1]};
+                if(bit_count_reg == 7)
+                begin
+                    n_state = STOP;
+                end else begin
+                    bit_count_next = bit_count_reg +1;
+                end
             end
         end
 
