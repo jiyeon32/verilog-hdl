@@ -18,13 +18,71 @@ module watch_datapath (
     input reset,
     input inc,
     input dec,
+    input [1:0] cursor,
     output [6:0] msec,
     output [5:0] sec,
     output [5:0] min,
     output [4:0] hour
 );
+    wire w_tick_10ms, w_tick_sec, w_tick_min, w_tick_hour;
 
-    wire w_tick_10ms;
+    wire w_inc_hour = inc & (cursor == 2'b11);
+    wire w_inc_min = inc & (scursor == 2'b10);
+    wire w_inc_sec = inc & (scursor == 2'b01);
+    wire w_inc_msec = inc & (cursor == 2'b00);
+    wire w_dec_hour = dec & (cursor == 2'b11);
+    wire w_dec_min = dec & (scursor == 2'b10);
+    wire w_dec_sec = dec & (scursor == 2'b01);
+    wire w_dec_msec = dec & (cursor == 2'b00);
+
+
+    watch_counter #(
+        .BIT_WIDTH(5),
+        .TIMES(24),
+        .default_value(12)
+
+    ) U_WATCH_HOUR_COUNTER(
+        .clk(clk),
+        .reset(reset),
+        .i_tick(w_tick_hour),
+        .inc(w_inc_hour),
+        .dec(w_dec_hour),
+        .o_tick(),
+        .time_count(hour)
+    );
+
+
+    watch_counter #(
+        .BIT_WIDTH(6),
+        .TIMES(60),
+        .default_value(0)
+
+    ) U_WATCH_MIN_COUNTER(
+        .clk(clk),
+        .reset(reset),
+        .i_tick(w_tick_min),
+        .inc(w_inc_min),
+        .dec(w_dec_min),
+        .o_tick(w_tick_hour),
+        .time_count(min)
+    );
+
+
+    watch_counter #(
+        .BIT_WIDTH(6),
+        .TIMES(60),
+        .default_value(0)
+
+    ) U_WATCH_SEC_COUNTER(
+        .clk(clk),
+        .reset(reset),
+        .i_tick(w_tick_sec),
+        .inc(w_inc_sec),
+        .dec(w_dec_sec),
+        .o_tick(w_tick_min),
+        .time_count(sec)
+    );
+
 
     watch_counter #(
         .BIT_WIDTH(7),
@@ -35,13 +93,13 @@ module watch_datapath (
         .clk(clk),
         .reset(reset),
         .i_tick(w_tick_10ms),
-        .inc(),
-        .dec(),
-        .o_tick(),
-        .time_count()
+        .inc(w_inc_msec),
+        .dec(w_dec_msec),
+        .o_tick(w_tick_sec),
+        .time_count(msec)
     );
 
-    tick_gen_100hz U__WATCH_TICK_GEN_100HZ(
+    tick_gen_100hz U_WATCH_TICK_GEN_100HZ(
         .clk(clk),
         .reset(reset),
         .run_stop(1'b1),
