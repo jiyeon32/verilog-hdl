@@ -126,6 +126,7 @@ set rc [catch {
   create_msg_db init_design.pb
   set_param chipscope.maxJobs 4
   set_param synth.incrementalSynthesisCache C:/GitHub/verilog-hdl/2026.10.20/.Xil/Vivado-5772-DESKTOP-7CFQ9ND/incrSyn
+  set_param xicom.use_bs_reader 1
 OPTRACE "create in-memory project" START { }
   create_project -in_memory -part xc7a35tcpg236-1
   set_property board_part digilentinc.com:basys3:part0:1.2 [current_project]

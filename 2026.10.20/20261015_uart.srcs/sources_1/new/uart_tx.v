@@ -44,7 +44,7 @@ module uart_tx(
     always @(*) begin
         n_state = c_state;
         bit_count_next = bit_count_reg;
-        b_tick_cnt_next <=b_tick_cnt_reg;
+        b_tick_cnt_next = b_tick_cnt_reg;
         data_next = data_reg;
         tx_next = tx_reg;
         tx_busy_next = tx_busy_reg;
