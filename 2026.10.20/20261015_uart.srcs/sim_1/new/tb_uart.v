@@ -4,11 +4,11 @@ module tb_uart ();
 
     parameter BAUD_BIT_PERIOD = 100_000_000 / 9600 * 10;
 
-    reg clk, rst, btnR;
-    reg [7:0] result_data;
-    wire led, tx;
+    reg clk, rst, rx;
+    reg [7:0] result_data, expected_data;
+    wire tx;
 
-    uart dut (
+    uart_loopback dut (
         .clk (clk),
         .rst (rst),
         .btnR(btnR),
@@ -18,8 +18,24 @@ module tb_uart ();
 
 
     always #5 clk = ~clk;
+    // for UART rx, like PC
+     task sender_uart(input [7:0] send_data);
+        integer i;
+        begin
+            rx = 0; // start bit
+            #(BAUD_BIT_PERIOD);
+            //check start bit 0
+            for (i = 0; i < 8; i = i + 1) begin
+                rx = send_data[i];
+                 #(BAUD_BIT_PERIOD);
+            end
+            rx = 1; // stop bit
+            #(BAUD_BIT_PERIOD);
+            
+        end
+    endtask
 
-    task receive_uart();
+    task receive_uart(output [7:0] rx_data);
         integer i;
         begin
             wait (~tx);
@@ -38,24 +54,18 @@ module tb_uart ();
     initial begin
         clk  = 0;
         rst  = 1;
-        btnR = 0;
-        #10 rst = 0; #10;
-
-        // push button tx_start
-
-        btnR = 1;
-        #(10 * 100 * 10);
-        btnR = 0;
+        rx = 1;
+        expected_data = 8'h30;
 
 
-        // uart tx 1frame 10bit
-        //   #(BAUD_BIT_PERIOD * 10);
-        // uart receive
-        receive_uart();
+        #10 rst = 0;
+
+        send_data(expected_data);
+        receive_uart(result_data);
 
         #100;
         // To compare result data and expected data
-        if (result_data == 8'h30) $display("pass!!!");
+        if (result_data == expected_data) $display("pass!!!");
         else $display("fail!!!");
         $stop;
 

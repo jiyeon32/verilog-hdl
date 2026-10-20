@@ -35,7 +35,6 @@ set rt::rc [catch {
     set rt::useElabCache false
     if {$rt::useElabCache == false} {
       rt::read_verilog {
-      C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/imports/new/btn_debounce.v
       C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_rx.v
       C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_tx.v
       C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart.v
@@ -43,7 +42,7 @@ set rt::rc [catch {
       rt::filesetChecksum
     }
     rt::set_parameter usePostFindUniquification false
-    set rt::top uart
+    set rt::top uart_loopback
     rt::set_parameter enableIncremental true
     rt::set_parameter markDebugPreservationLevel "enable"
     set rt::reportTiming false

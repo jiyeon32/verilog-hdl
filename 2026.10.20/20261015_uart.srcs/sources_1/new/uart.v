@@ -1,40 +1,34 @@
 `timescale 1ns / 1ps
-module uart (
+module uart_loopback (
     input clk,
     input rst,
-    input btnR,
-    input rx,
-    output led, // tx_busy
-    output tx
+    input rx, // from PC
+    output tx // to PC
 );
 
-wire w_b_tick, w_tx_start;
+wire w_b_tick, w_rx_done;
+wire [7:0] w_rx_data;
 
-button_debounce U_BD_TX_START(
-        .clk(clk),
-        .reset(rst),
-        .i_btn(btnR),
-        .o_btn(w_tx_start)
-);
-
+// uart rx
 uart_rx U_UART_RX(
         .clk(clk),
         .rst(rst),
         .b_tick(w_b_tick),
         .rx(rx),
-        .rx_data(),
-        .rx_done()
+        .rx_data(w_rx_data),
+        .rx_done(w_rx_done)
     );
 
 
+// uart tx
 uart_tx U_UART_TX(
     .clk(clk),
     .rst(rst),
-    .tx_start(w_tx_start),
-    .tx_data(8'h30),
+    .tx_start(w_rx_done),
+    .tx_data(w_rx_data),
     .b_tick(w_b_tick),
     .tx(tx),
-    .tx_busy(led)
+    .tx_busy()
 );
 
 baud_tick_gen U_BAUD_TICK_GEN(
