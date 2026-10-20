@@ -1,38 +1,3 @@
-`timescale 1ns / 1ps
-module uart (
-    input clk,
-    input rst,
-    input btnR,
-    output led, // tx_busy
-    output tx
-);
-
-wire w_b_tick, w_tx_start;
-
-button_debounce U_BD_TX_START(
-        .clk(clk),
-        .reset(rst),
-        .i_btn(btnR),
-        .o_btn(w_tx_start)
-);
-
-uart_tx U_UART_TX(
-    .clk(clk),
-    .rst(rst),
-    .tx_start(w_tx_start),
-    .tx_data(8'h30),
-    .b_tick(w_b_tick),
-    .tx(tx),
-    .tx_busy(led)
-);
-
-baud_tick_gen U_BAUD_TICK_GEN(
-    .clk(clk),
-    .rst(rst),
-    .b_tick(w_b_tick)
-);
-
-endmodule
 
 module uart_tx(
     input clk,
@@ -133,7 +98,7 @@ endmodule
 
 
 
-module baud_tick_gen(
+/*module baud_tick_gen(
     input clk,
     input rst,
     output reg b_tick
@@ -158,4 +123,4 @@ module baud_tick_gen(
             end
         end
     end
-endmodule
+endmodule */

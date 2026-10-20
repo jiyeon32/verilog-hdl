@@ -1,0 +1,19 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Tue Oct 20 14:07:18 2026
+# Process ID: 5772
+# Current directory: C:/GitHub/verilog-hdl/2026.10.20
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent12104 C:\GitHub\verilog-hdl\2026.10.20\20261015_uart.xpr
+# Log file: C:/GitHub/verilog-hdl/2026.10.20/vivado.log
+# Journal file: C:/GitHub/verilog-hdl/2026.10.20\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.xpr
+WARNING: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2020.2/data/ip'.
