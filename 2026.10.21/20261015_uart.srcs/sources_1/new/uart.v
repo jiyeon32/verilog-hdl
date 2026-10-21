@@ -4,11 +4,16 @@ module uart_loopback (
     input clk,
     input rst,
     input rx, // from PC
-    output tx // to PC
+    output tx, // to PC
+    output rx_done,
+    output [7:0] rx_data
 );
 
 wire w_b_tick, w_rx_done;
 wire [7:0] w_rx_data;
+
+assign rx_done = w_rx_done;
+assign rx_data = w_rx_data;
 
 // uart rx
 uart_rx U_UART_RX(
