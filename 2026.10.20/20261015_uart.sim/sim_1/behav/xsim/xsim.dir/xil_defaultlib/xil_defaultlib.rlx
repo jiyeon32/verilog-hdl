@@ -3,6 +3,8 @@
 Nov 18 2020
 09:47:47
 C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.sim/sim_1/behav/xsim/glbl.v,1605673889,verilog,,,,glbl,,,,,,,,
-C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sim_1/new/tb_uart.v,1792461936,verilog,,,,tb_uart,,,,,,,,
+C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sim_1/new/tb_uart.v,1792542141,verilog,,,,tb_uart,,,,,,,,
 C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/imports/new/btn_debounce.v,1791869538,verilog,,C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_tx.v,,button_debounce,,,,,,,,
-C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_tx.v,1792464786,verilog,,C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sim_1/new/tb_uart.v,,baud_tick_gen;uart;uart_tx,,,,,,,,
+C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart.v,1792540294,verilog,,C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_rx.v,,baud_tick_gen;uart_loopback,,,,,,,,
+C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_rx.v,1792541299,verilog,,C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_tx.v,,uart_rx,,,,,,,,
+C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sources_1/new/uart_tx.v,1792542440,verilog,,C:/GitHub/verilog-hdl/2026.10.20/20261015_uart.srcs/sim_1/new/tb_uart.v,,uart_tx,,,,,,,,

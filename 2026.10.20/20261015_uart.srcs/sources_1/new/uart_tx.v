@@ -25,10 +25,10 @@ module uart_tx(
         if(rst) begin
             c_state <= IDLE;
             bit_count_reg <= 3'b0;
-            b_tick_cnt_reg <= 4'h0;
+            b_tick_cnt_reg <= 0;
             data_reg <= 8'h0;
             tx_reg <= 1'b1;
-            tx_busy_reg <= 1'b0; // n busy
+            tx_busy_reg <= 1'b0; // no busy
         end else begin
             c_state <= n_state;
             bit_count_reg <= bit_count_next;

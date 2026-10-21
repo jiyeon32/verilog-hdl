@@ -9,13 +9,11 @@ module tb_uart ();
     wire tx;
 
     uart_loopback dut (
-        .clk (clk),
-        .rst (rst),
-        .btnR(btnR),
-        .led (led),   // tx_busy
-        .tx  (tx)
+        .clk(clk),
+        .rst(rst),
+        .rx (rx),    
+        .tx (tx)
     );
-
 
     always #5 clk = ~clk;
     // for UART rx, like PC
@@ -44,7 +42,7 @@ module tb_uart ();
             if (tx != 0) $display("error start bit error");
             for (i = 0; i < 8; i = i + 1) begin
                 #(BAUD_BIT_PERIOD);
-                result_data[i] = tx;
+                rx_data[i] = tx;
             end
             #(BAUD_BIT_PERIOD);
             if (!tx) $display("error stop bit");
@@ -60,7 +58,7 @@ module tb_uart ();
 
         #10 rst = 0;
 
-        send_data(expected_data);
+        sender_uart(expected_data);
         receive_uart(result_data);
 
         #100;
