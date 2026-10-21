@@ -11,16 +11,17 @@ module uart_rx(
 
     localparam [1:0] IDLE = 2'b00, START =  2'b01, DATA = 2'b10, STOP = 2'b11;
 
-    reg[1:0] c_state, n_state;
-    reg [3:0] b_tick_cnt,b_tick_cnt_next;
+    reg [1:0] c_state, n_state;
+    reg [3:0] b_tick_cnt, b_tick_cnt_next;
     reg [2:0] bit_cnt, bit_cnt_next;
     reg [7:0] data_reg, data_next;
-    reg rx_done_reg, rx_done_next;
+    reg [7:0] rx_data_reg, rx_data_next;
+    reg       rx_done_reg, rx_done_next;
 
+
+    assign rx_data = rx_data_reg;
     assign rx_done = rx_done_reg;
-    assign rx_data = data_reg;
   
-
 
     always @(posedge clk, posedge rst) begin
         if(rst) begin
@@ -31,11 +32,14 @@ module uart_rx(
             data_reg <= 8'h00;
             
         end else begin
-            c_state <= n_state;
-            b_tick_cnt <= b_tick_cnt_next;
-            bit_cnt <= bit_cnt_next;
-            rx_done_reg <=  rx_done_next;
-            data_reg <= data_next;
+            c_state         <= n_state;
+            b_tick_cnt      <= b_tick_cnt_next;
+            bit_cnt         <= bit_cnt_next;
+            rx_done_reg     <= rx_done_next;
+
+            data_reg        <= data_next;
+            rx_data_reg     <= rx_data_next;
+
         end
     end
 
@@ -47,6 +51,8 @@ module uart_rx(
         bit_cnt_next = bit_cnt;
         data_next = data_reg;
         rx_done_next = rx_done_reg;
+
+        rx_done_next    = 1'b0;
 
         case(c_state)
         IDLE : begin
@@ -67,7 +73,7 @@ module uart_rx(
                     data_next = 8'h00;
                     n_state = DATA;
                 end else begin
-                b_tick_cnt_next = b_tick_cnt + 1;
+                    b_tick_cnt_next = b_tick_cnt + 1;
                 end
             end
         end
@@ -90,17 +96,20 @@ module uart_rx(
             end
         end
         
-        STOP : begin
-            if(b_tick) begin
-                if(b_tick_cnt == 15) begin      
-                    rx_done_next = 1'b1;
-                    n_state = IDLE;
-                end else begin
-                    b_tick_cnt_next = b_tick_cnt + 1;  
-                end
-            end
+        STOP: begin
+                        if (b_tick) begin
+                            if (b_tick_cnt == 15) begin
+                                n_state = IDLE;
+                                rx_data_next = data_reg;
+                                b_tick_cnt_next = 0;
+                                rx_done_next = 1'b1;
+                            end else begin
+                                b_tick_cnt_next = b_tick_cnt + 1;
+                            end
+                        end
+                    end
+                endcase
         end
-        endcase
-    end
 
 endmodule
+
