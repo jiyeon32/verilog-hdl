@@ -9,7 +9,7 @@ module tb_ram();
     bram_ip dut(
     .clk(clk),
     .we(we),
-    .addr(adder),
+    .addr(addr),
     .wdata(wdata),
     .rdata(rdata)
     );
@@ -44,9 +44,9 @@ module tb_ram();
         @(posedge clk);
         addr = 11;
         @(posedge clk);
-        addr = 30;
-        @(posedge clk);
         addr = 31;
+        @(posedge clk);
+        addr = 32;
         @(posedge clk);
         $stop;
     end
