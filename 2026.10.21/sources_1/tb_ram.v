@@ -27,10 +27,27 @@ module tb_ram();
         we = 1;
         addr = 10;
         wdata = 8'h0a;
-
         @(negedge clk);
         addr = 11;
         wdata = 8'h0b;
+        @(negedge clk);
+        addr = 31;
+        wdata = 8'h0c;
+        @(negedge clk);
+        addr = 32;
+        wdata = 8'h0d;
+        @(negedge clk);
+        we = 0;
+        @(negedge clk);
+        addr = 10;
+        @(negedge clk);
+        addr = 11;
+        @(negedge clk);
+        addr = 31;
+        @(negedge clk);
+        addr = 32;
+        @(negedge clk);
+        $stop;
     end
 
 endmodule
