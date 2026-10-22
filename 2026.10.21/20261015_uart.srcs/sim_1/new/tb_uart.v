@@ -7,6 +7,8 @@ module tb_uart ();
     reg clk, rst, rx;
     reg [7:0] result_data, expected_data;
     wire tx;
+    integer i;
+    integer pass_count,  fail_count;
 
     uart_ascii_decoder dut (
         .clk(clk),
@@ -52,26 +54,40 @@ module tb_uart ();
     task score_board(input [7:0] result, expected);
         begin
             // To compare result data and expected data
-            if (result == expected) $display("pass!!!");
-            else $display("fail!!!");
+            if (result == expected) begin
+                pass_count = pass_count+1;
+                $display("%t : pass!!!", $time);
+            end else  begin
+                fail_count = fail_count + 1;
+                $display("%t : fail!!!", $time);
+            end
         end
     endtask
+
 
     initial begin
         clk  = 0;
         rst  = 1;
         rx = 1;
+        i = 0;
+        pass_count = 0;
+        fail_count = 0;
         expected_data = 8'h30;
         result_data = 8'h00;
 
 
         #10 rst = 0;
-        expected_data = $random() % 256;
-        sender_uart(expected_data);
-        receive_uart(result_data);
-        score_board(result_data, expected_data);
+        for (i = 0; i<256; i=i+1) begin
+            expected_data = $random() % 256;
+            sender_uart(expected_data);
+            receive_uart(result_data);
+            score_board(result_data, expected_data);
+        end
 
-        #100;
+        #1000;
+        $display("total test num = %d", i);
+        $display("Pass count = %d", pass_count);
+        $display("Fail count = %d", fail_count);
         $stop;
 
     end
