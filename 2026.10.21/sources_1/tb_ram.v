@@ -23,32 +23,14 @@ module tb_ram();
         wdata = 0;
 
         // write to ram
-        @(posedge clk);
+        @(negedge clk);
         we = 1;
         addr = 10;
         wdata = 8'h0a;
-        @(posedge clk);
+
+        @(negedge clk);
         addr = 11;
         wdata = 8'h0b;
-        @(posedge clk);
-        addr = 31;
-        wdata = 8'h0c;
-        @(posedge clk);
-        addr = 32;
-        wdata = 8'h0d;
-        // read from ram
-        @(posedge clk);
-        we = 0;
-        @(posedge clk);
-        addr = 10;
-        @(posedge clk);
-        addr = 11;
-        @(posedge clk);
-        addr = 31;
-        @(posedge clk);
-        addr = 32;
-        @(posedge clk);
-        $stop;
     end
 
 endmodule

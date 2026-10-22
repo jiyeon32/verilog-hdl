@@ -8,7 +8,7 @@ module tb_uart ();
     reg [7:0] result_data, expected_data;
     wire tx;
 
-    uart_loopback dut (
+    uart_ascii_decoder dut (
         .clk(clk),
         .rst(rst),
         .rx (rx),    
@@ -62,6 +62,7 @@ module tb_uart ();
         rst  = 1;
         rx = 1;
         expected_data = 8'h30;
+        result_data = 8'h00;
 
 
         #10 rst = 0;
