@@ -72,12 +72,12 @@ module tb_fifo ();
         for (i = 0; i < 5; i = i + 1) begin
             @(negedge clk);
             pop = 1'b1;
-                if(!empty) begin
+            if (!empty) begin
                 if (pop_data == compare_buffer[pop_cnt]) begin
                     $display("%t : pass pop data = %d", $stime, pop_data);
                 end else begin
                     $display("%t : fail pop data = %d, compare = %d", $stime,
-                            pop_data, compare_buffer[pop_cnt]);
+                             pop_data, compare_buffer[pop_cnt]);
                 end
                 pop_cnt = pop_cnt + 1;
             end
@@ -98,19 +98,53 @@ module tb_fifo ();
         for (i = 0; i < 5; i = i + 1) begin
             @(negedge clk);
             push = 1'b1;
-            push_data = 8'h0f -i;
-            if(!full) begin
+            push_data = 8'h0f - i;
+            if (!full) begin
                 compare_buffer[push_cnt] = push_data;
                 push_cnt = push_cnt + 1;
             end
-            pop  = 1'b1;
+            pop = 1'b1;
 
-            if(!empty) begin
+            if (!empty) begin
                 if (pop_data == compare_buffer[pop_cnt]) begin
                     $display("%t : pass pop data = %d", $stime, pop_data);
                 end else begin
                     $display("%t : fail pop data = %d, compare = %d", $stime,
-                            pop_data, compare_buffer[pop_cnt]);
+                             pop_data, compare_buffer[pop_cnt]);
+                end
+                pop_cnt = pop_cnt + 1;
+            end
+        end
+
+        //for empty fifo
+        @(negedge clk);
+        push = 0;
+        pop = 1;
+        pop_cnt = pop_cnt + 1;
+        @(negedge clk);
+        pop = 0;
+        @(negedge clk);
+
+        $display("To start random test");
+        // random test
+        for (i = 0; i < 256; i = i + 1) begin
+            @(negedge clk);
+            push = $random() % 2;
+            pop = $random() % 2;
+            push_data = $random() % 256;
+
+            // push 1 
+            if (push & (~full)) begin
+                compare_buffer[push_cnt] = push_data;
+                push_cnt = push_cnt + 1;
+            end
+
+            // pop 1 
+            if (pop & (~empty)) begin
+                if(pop_data == compare_buffer[pop_cnt]) begin
+                    $display("%t :  pass !! ", $time);
+                end else begin
+                    $display("%t :  fail !!! ", $time);
                 end
                 pop_cnt = pop_cnt + 1;
             end
@@ -123,7 +157,7 @@ module tb_fifo ();
 
 endmodule
 
-    /*
+/*
         // rst
     initial begin
         clk       = 0;
@@ -152,7 +186,7 @@ endmodule
         $finish;
     end*/
 
-    /*
+/*
     //push only
 
      initial begin
@@ -190,7 +224,7 @@ endmodule
         $finish;
     end */
 
-    /*
+/*
     // pop only
     initial begin
         clk       = 0;
@@ -244,7 +278,7 @@ endmodule
         $finish;
     end */
 
-    /*
+/*
     // push/pop
     initial begin
         clk       = 0;
