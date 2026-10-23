@@ -10,7 +10,7 @@ module tb_fifo ();
     wire full, empty;
 
     reg [7:0] compare_buffer[0:DEPTH-1];
-    integer i;
+    integer i, pass_cnt, fail_cnt;
     reg [1:0] push_cnt, pop_cnt;
 
     fifo #(
@@ -35,6 +35,8 @@ module tb_fifo ();
         pop       = 0;
         push_data = 0;
         i         = 0;
+        pass_cnt  = 0;
+        fail_cnt  = 0;
         push_cnt  = 0;
         pop_cnt   = 0;
         @(negedge clk);
@@ -141,15 +143,23 @@ module tb_fifo ();
 
             // pop 1 
             if (pop & (~empty)) begin
-                if(pop_data == compare_buffer[pop_cnt]) begin
+                if (pop_data == compare_buffer[pop_cnt]) begin
+                    pass_cnt = pass_cnt + 1;
                     $display("%t :  pass !! ", $time);
                 end else begin
+                    fail_cnt = fail_cnt + 1;
                     $display("%t :  fail !!! ", $time);
                 end
                 pop_cnt = pop_cnt + 1;
             end
         end
 
+        #10;
+        // report
+        $display("*** Random test result ***");
+        $display("* total random test = %4d", i);
+        $display("* pass count        = %4d", pass_cnt);
+        $display("* fail count        = %4d", fail_cnt);
         #10;
         $finish;
     end
