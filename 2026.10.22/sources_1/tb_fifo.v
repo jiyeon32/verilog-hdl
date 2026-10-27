@@ -70,6 +70,7 @@ module tb_fifo ();
         @(negedge clk);
         push = 1'b0;
 
+        $display ("pop only");
         // pop only, pop 5times
         for (i = 0; i < 5; i = i + 1) begin
             @(negedge clk);

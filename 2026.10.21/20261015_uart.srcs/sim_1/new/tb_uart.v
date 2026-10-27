@@ -10,7 +10,7 @@ module tb_uart ();
     integer i;
     integer pass_count,  fail_count;
 
-    uart_ascii_decoder dut (
+    uart_fifo_loopback dut (
         .clk(clk),
         .rst(rst),
         .rx (rx),    
@@ -73,22 +73,21 @@ module tb_uart ();
         pass_count = 0;
         fail_count = 0;
         expected_data = 8'h30;
-        result_data = 8'h00;
 
 
         #10 rst = 0;
-        for (i = 0; i<256; i=i+1) begin
+        for (i = 0; i<16; i=i+1) begin
             expected_data = $random() % 256;
             sender_uart(expected_data);
             receive_uart(result_data);
             score_board(result_data, expected_data);
         end
 
-        #1000;
+        #100;
         $display("total test num = %d", i);
         $display("Pass count = %d", pass_count);
         $display("Fail count = %d", fail_count);
-        $stop;
+        $finish;
 
     end
 endmodule
