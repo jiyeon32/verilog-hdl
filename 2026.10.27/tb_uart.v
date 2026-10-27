@@ -6,15 +6,19 @@ module tb_uart ();
 
     reg clk, rst, rx;
     wire tx;
+    wire run_stop, clear, mode;
 
 
     uart_fifo_ascii dut (
-        .clk     (clk),
-        .rst     (rst),
-        .rx      (rx),
-        .tx      (tx),
-        .fnd_com (),
-        .fnd_font()
+        .clk        (clk),
+        .rst        (rst),
+        .rx         (rx),
+        .tx         (tx),
+        .run_stop   (run_stop),
+        .clear      (clear),
+        .mode       (mode)
+        //.fnd_com (),
+        //.fnd_font()
     );
     always #5 clk = ~clk;
     // for UART rx, like PC
@@ -53,15 +57,15 @@ module tb_uart ();
     initial begin
         clk = 0;
         rst = 1;
-        rx = 1;
+        rx  = 1;
 
         #10 rst = 0;
 
-        sender_uart("1");
-        sender_uart("2");
-        sender_uart("3");
-        sender_uart("4");
-        sender_uart("5");
+        sender_uart("r");
+        sender_uart("c");
+        sender_uart("u");
+        sender_uart("R");
+        sender_uart("x");
 
         #1000;
 
