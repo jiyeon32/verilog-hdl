@@ -6,7 +6,10 @@ module ascii_decoder (
     input            enable,
     input      [7:0] ascii,
     output reg       pop,
-    output reg [3:0] bin
+    //output reg [3:0] bin,
+    output reg run_stop,
+    output reg clear,
+    output reg mode
 );
     reg [7:0] data_reg, data_next;
 
@@ -19,13 +22,24 @@ module ascii_decoder (
     end
 
     always @(*) begin
-        bin = 4'h0;
+        //bin = 4'h0;
         pop = 1'b0;
+        run_stop = 1'b0;
+        clear = 1'b0;
+        mode = 1'b0;
+        
         data_next = data_reg;
         if (enable) begin
             data_next = ascii;
             pop = 1'b1;
-        end else begin
+            case (ascii)
+                8'h72, 8'h52: run_stop = 1'b1;
+                8'h63, 8'h43: clear = 1'b1;
+                8'h75, 8'h55: mode = 1'b1;
+
+            endcase
+
+        end /*else begin
             case (data_reg)
                 8'h30: bin = 4'h0;
                 8'h31: bin = 4'h1;
@@ -42,9 +56,10 @@ module ascii_decoder (
                 8'h43, 8'h63: bin = 4'hC;
                 8'h44, 8'h64: bin = 4'hD;
                 8'h45, 8'h65: bin = 4'hE;
-                8'h46, 8'h66: bin = 4'hF;
+                8'h46, 8'h52: bin = 4'hF; 
+                
             endcase
-        end
+        end */
     end
 
 endmodule
