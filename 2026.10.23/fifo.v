@@ -47,15 +47,15 @@ endmodule
 
 module register_file #(
     parameter DEPTH = 4,
-    A_BIT_BIT_WIDTH = $clog2(DEPTH),
+    A_BIT_WIDTH = $clog2(DEPTH),
     D_BIT_WIDTH = 8
 ) (
-    input                        clk,
-    input                        we,
-    input  [A_BIT_BIT_WIDTH-1:0] waddr,
-    input  [A_BIT_BIT_WIDTH-1:0] raddr,
-    output [    D_BIT_WIDTH-1:0] rdata,
-    input  [    D_BIT_WIDTH-1:0] wdata
+    input                    clk,
+    input                    we,
+    input  [A_BIT_WIDTH-1:0] waddr,
+    input  [A_BIT_WIDTH-1:0] raddr,
+    input  [D_BIT_WIDTH-1:0] wdata,
+    output [D_BIT_WIDTH-1:0] rdata
 );
 
     // ram
