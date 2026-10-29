@@ -1,29 +1,48 @@
 `timescale 1ns / 1ps
 
 module top_sr04 (
-    input  clk,
-    input  rst,
-    input  sr04_start,
-    input  echo,
+    input clk,
+    input rst,
+    input btnR,
+    input echo,
+    output [3:0] fnd_com,
+    output [7:0] fnd_font,
     output trig
 );
 
     wire w_us_tick;
+    wire w_sr04_start;
+    wire [8:0] w_distance;
+
+    button_debounce U_BTN_DB (
+        .clk  (clk),
+        .reset(rst),
+        .i_btn(btnR),
+        .o_btn(w_sr04_start)
+    );
 
     sr04_controller U_SR04_CNTL (
-        .clk(clk),
-        .rst(rst),
-        .sr04_start(sr04_start),
-        .echo(echo),
-        .us_tick(w_us_tick),
-        .trig(trig),
-        .distance()
+        .clk       (clk),
+        .rst       (rst),
+        .sr04_start(w_sr04_start),
+        .echo      (echo),
+        .us_tick   (w_us_tick),
+        .trig      (trig),
+        .distance  (w_distance)
     );
 
     tick_gen_us U_TICK_GEN_US (
-        .clk(clk),
-        .rst(rst),
+        .clk    (clk),
+        .rst    (rst),
         .us_tick(w_us_tick)
+    );
+
+    fnd_controller U_FND_CNTL (
+        .clk     (clk),
+        .reset   (rst),
+        .fnd_data({5'b00000, w_distance}),
+        .fnd_com (fnd_com),
+        .fnd_font(fnd_font)
     );
 
 
@@ -44,6 +63,15 @@ module sr04_controller (
     reg [14:0] tick_cnt_reg, tick_cnt_next;
     reg [8:0] distance_reg, distance_next;
     reg trig_reg, trig_next;
+
+    // Integrated Logic Analyer
+    // probing trig, echo, fsm c_state
+    ila_0 U_ILA (
+        .clk(clk),
+        .probe0(trig),
+        .probe1(echo),
+        .probe2(c_state)
+    );
 
     assign distance = distance_reg;
     assign trig = trig_reg;
