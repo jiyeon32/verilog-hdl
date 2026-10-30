@@ -10,6 +10,16 @@ module top_dht11 (
 );
 
     wire w_dht11_start, w_us_tick;
+    wire [15:0] w_humidity, w_temperature;
+    wire [13:0] display_value = (w_humidity[15:8] * 100) + w_temperature[15:8];
+
+    fnd_controller U_FND_CONTROLLER (
+        .clk(clk),
+        .reset(rst),
+        .fnd_data(display_value), 
+        .fnd_com(fnd_com),
+        .fnd_font(fnd_font)
+);
     
     button_debounce U_BUTTON_START (
         .clk    (clk),
@@ -30,8 +40,8 @@ module top_dht11 (
         .dht11_start(w_dht11_start),  // start trigger
         .us_tick(w_us_tick),
         .valid(),  // chech sum ok
-        .humidity(),
-        .temperature(),
+        .humidity(w_humidity),
+        .temperature(w_temperature),
         .dht11_io(dht11_io)  // single wire, for half duplexing
     );
 
@@ -58,7 +68,6 @@ module dht11_controller (
     reg [$clog2(19_000)-1:0] tick_cnt_reg, tick_cnt_next;
     reg [5:0] bit_cnt_reg, bit_cnt_next;
     reg [39:0] data_reg, data_next;
-
 
     // output control by 3 state buffer
     assign dht11_io = (dht11_io_control_reg) ? dht11_io_reg : 1'bz;
