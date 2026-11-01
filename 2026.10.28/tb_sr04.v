@@ -57,7 +57,7 @@ module tb_sr04 ();
         @(posedge done);
         $display("#1 distance = %d", distance);
 
-        wait (dut_1.c_state == 0);
+        wait (DUT_SR04_CNTL.c_state == 0);
         #(2000);
 
         // #2
@@ -74,7 +74,7 @@ module tb_sr04 ();
         @(posedge done);
         $display("#2 distance = %d", distance);
 
-        wait (dut_1.c_state == 0);
+        wait (DUT_SR04_CNTL.c_state == 0);
         #(2000);
 
         // #3
@@ -93,7 +93,7 @@ module tb_sr04 ();
         #(38*1_000_000);
         $display("#3 distance = %d", distance);
         echo = 0;
-        wait (dut_1.c_state == 0);
+        wait (DUT_SR04_CNTL.c_state == 0);
         #(2000);
 
         //#4
@@ -118,7 +118,7 @@ module tb_sr04 ();
         #(20*1_000_000);
         ready=1;
 
-        wait (dut_1.c_state == 0);
+        wait (DUT_SR04_CNTL.c_state == 0);
         #(2000);
         $finish;
 
